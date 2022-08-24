@@ -5,9 +5,12 @@ import "github.com/chirag3003/vote-back/database"
 var conn *database.Database
 
 type Controllers struct {
+	UserAccount UserAccountsController
 }
 
 func Setup(db *database.Database) *Controllers {
 	conn = db
-	return &Controllers{}
+	return &Controllers{
+		UserAccount: userAccountController(),
+	}
 }

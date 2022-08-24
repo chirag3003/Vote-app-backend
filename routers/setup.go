@@ -12,4 +12,5 @@ func Setup(controllers *controllers.Controllers, app *fiber.App) {
 	app.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.SendString("Hello World")
 	})
+	userAccountRouters(app.Group("/userAccount"))
 }

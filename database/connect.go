@@ -8,6 +8,7 @@ import (
 )
 
 type Database struct {
+	DB     *mongo.Database
 	client *mongo.Client
 }
 
@@ -18,6 +19,7 @@ func (d *Database) Connect() {
 		panic(err)
 	}
 	d.client = client
+	d.DB = client.Database("VOTE")
 }
 func (d *Database) Disconnect() {
 	err := d.client.Disconnect(context.TODO())
