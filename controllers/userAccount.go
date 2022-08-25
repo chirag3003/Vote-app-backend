@@ -8,6 +8,9 @@ import (
 
 type UserAccountsController interface {
 	ImportUser(ctx *fiber.Ctx) error
+	FindUsers(ctx *fiber.Ctx) error
+	VoteUserUp(ctx *fiber.Ctx) error
+	VoteUserDown(ctx *fiber.Ctx) error
 }
 
 type userRoutes struct {
@@ -37,5 +40,39 @@ func (u *userRoutes) ImportUser(ctx *fiber.Ctx) error {
 		return err
 	}
 
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func (u *userRoutes) FindUsers(ctx *fiber.Ctx) error {
+	users, err := u.userAcc.FindUsers()
+	if err != nil {
+		return err
+	}
+	return ctx.JSON(users)
+}
+
+func (u *userRoutes) VoteUserUp(ctx *fiber.Ctx) error {
+	body := &models.UserAccountVote{}
+	err := ctx.BodyParser(body)
+	if err != nil {
+		return err
+	}
+	err = u.userAcc.UpVote(body.UserName, 1)
+	if err != nil {
+		return err
+	}
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func (u *userRoutes) VoteUserDown(ctx *fiber.Ctx) error {
+	body := &models.UserAccountVote{}
+	err := ctx.BodyParser(body)
+	if err != nil {
+		return err
+	}
+	err = u.userAcc.DownVote(body.UserName, 1)
+	if err != nil {
+		return err
+	}
 	return ctx.SendStatus(fiber.StatusOK)
 }
